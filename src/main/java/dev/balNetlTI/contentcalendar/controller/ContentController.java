@@ -3,14 +3,10 @@ package dev.balNetlTI.contentcalendar.controller;
 import dev.balNetlTI.contentcalendar.Repository.ContentCollectionRepository;
 import dev.balNetlTI.contentcalendar.model.Content;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 //en el controlador es la coneccion con el front se esta mandando a llamar la logica de negocio
 //que esta en repository, en repository es donde van las operaciones de negocio
@@ -35,5 +31,26 @@ public class ContentController {
     public Content findById(@PathVariable Integer id){
         return repository.findById(id)
                 .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"Content not found!"));
+    }
+
+    // post request para meter datos.
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("")
+    public void create(@RequestBody Content content){
+        repository.save(content);
+    }
+
+    @PutMapping("/{id}")
+    public void update(@RequestBody Content content,@PathVariable Integer id){
+        if(!repository.existsById(id)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Content not found");
+        }
+        repository.save(content);
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Integer id){
+        repository.deleterecord(id);
     }
 }

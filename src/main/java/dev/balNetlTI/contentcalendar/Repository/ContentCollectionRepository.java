@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public class ContentCollectionRepository {
-    private final List<Content> content = new ArrayList<>();
+    private final List<Content> contentList = new ArrayList<>();
 
     public ContentCollectionRepository(){
 
@@ -20,12 +20,22 @@ public class ContentCollectionRepository {
 
     //para traer  el contenido
     public List<Content> findAll() {
-        return content;
+        return contentList;
     }
 
     //para traer solo un registro
     public Optional<Content> findById(Integer id){
-        return content.stream().filter( d -> d.id().equals(id)).findFirst();
+        return contentList.stream().filter(d -> d.id().equals(id)).findFirst();
+    }
+
+    public void save(Content content) {
+        contentList.removeIf(c -> c.id().equals(content.id())); // esto es inmemory
+        contentList.add(content);
+
+    }
+
+    public boolean existsById(Integer id) {
+        return contentList.stream().filter(d -> d.id().equals(id)).count() == 1;
     }
 
     // se ejecuta despues de la injeccion de dependencias
@@ -33,16 +43,20 @@ public class ContentCollectionRepository {
     private void init() {
         //simulamos que tenemos datos y los insertamos a la lista de content
         Content c = new Content(
-                 1,
-                 "mi primer post de blog",
-                 "primer post de blog",
+                1,
+                "mi primer post de blog",
+                "primer post de blog",
                 Status.IDEA,
                 Type.ARTICLE,
                 LocalDateTime.now(),
-                 null,
-                 "");
+                null,
+                "");
 
-        content.add(c);
+        contentList.add(c);
 
+    }
+
+    public void deleterecord(Integer id) {
+        contentList.removeIf(c -> c.id().equals(id));
     }
 }
