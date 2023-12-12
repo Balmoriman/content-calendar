@@ -2,6 +2,7 @@ package dev.balNetlTI.contentcalendar.controller;
 
 import dev.balNetlTI.contentcalendar.Repository.ContentCollectionRepository;
 import dev.balNetlTI.contentcalendar.model.Content;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -12,6 +13,7 @@ import java.util.List;
 //que esta en repository, en repository es donde van las operaciones de negocio
 @RestController
 @RequestMapping("/api/content")
+@CrossOrigin
 public class ContentController {
 
     private final ContentCollectionRepository repository;
@@ -34,9 +36,10 @@ public class ContentController {
     }
 
     // post request para meter datos.
+    //se le pone valid para que el objeto que esta recibinedo el metodo sea el que se le pida y no entre basura
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-    public void create(@RequestBody Content content){
+    public void create(@Valid @RequestBody Content content){
         repository.save(content);
     }
 
